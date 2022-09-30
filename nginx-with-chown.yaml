@@ -20,6 +20,7 @@ spec:
         ports:
         - containerPort: 80
         securityContext:
+          allowPrivilegeEscalation: false
           capabilities:
             add:
             - CHOWN

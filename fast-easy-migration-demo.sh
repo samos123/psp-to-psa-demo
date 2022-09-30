@@ -49,9 +49,9 @@ pe "kubectl describe deployment/nginx-priv"
 pe "kubectl get events --field-selector reason=FailedCreate --sort-by='.metadata.creationTimestamp' | tail -n 1"
 
 # cleanup
-kubectl delete -f nginx.yaml > /dev/null
-kubectl delete -f nginx-priv.yaml > /dev/null
-kubectl delete -f privileged-psp.yaml > /dev/null
-kubectl delete -n default rolebinding disable-psp > /dev/null
-kubectl delete clusterrole privileged-psp > /dev/null
+kubectl delete -f nginx.yaml > /dev/null 2>&1
+kubectl delete -f nginx-priv.yaml > /dev/null 2>&1
+kubectl delete -f privileged-psp.yaml > /dev/null 2>&1
+kubectl delete -n default rolebinding disable-psp > /dev/null 2>&1
+kubectl delete clusterrole privileged-psp > /dev/null 2>&1
 kubectl label namespaces default pod-security.kubernetes.io/enforce- > /dev/null
