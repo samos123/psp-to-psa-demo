@@ -20,8 +20,8 @@ wait_available() {
 #pe "kubectl get psp my-psp -o yaml"
 #pe "kubectl get clusterrole my-psp -o yaml"
 #pe "kubectl get clusterrolebinding psp-all-sa  -o yaml"
-pe "cat nginx.yaml"
-pe "kubectl apply -f nginx.yaml"
+pe "cat nginx-nonpriv.yaml"
+pe "kubectl apply -f nginx-nonpriv.yaml"
 wait_available deployment/nginx-nonpriv
 pe "kubectl get pod -l app=nginx -o json | jq '.items[].spec.containers'"
 
@@ -32,9 +32,8 @@ pe "pspmigrator mutating psp my-psp"
 pe "pspmigrator migrate"
 POD_NAME=$(kubectl get pod -l app=nginx --no-headers -o custom-columns=":metadata.name")
 pe "pspmigrator mutating pod $POD_NAME -n default"
-pe "cat nginx-with-chown.yaml"
-pe "kubectl apply -f nginx-with-chown.yaml"
-pe "pspmigrator migrate"
+pe "cat nginx-with-security-context.yaml"
+pe "kubectl apply -f nginx-with-security-context.yaml"
 pe "pspmigrator migrate --dry-run=false"
 pe "kubectl get ns default -o yaml"
 
@@ -44,7 +43,7 @@ pe "kubectl get ns default -o yaml"
 # pe "kubectl create -n default rolebinding disable-psp --clusterrole privileged-psp --group system:serviceaccounts:default"
 
 # cleanup
-kubectl delete -f nginx.yaml > /dev/null 2>&1
+kubectl delete -f nginx-nonpriv.yaml > /dev/null 2>&1
 kubectl delete -f nginx-priv.yaml > /dev/null 2>&1
 kubectl delete -f privileged-psp.yaml > /dev/null 2>&1
 kubectl delete -n default rolebinding disable-psp > /dev/null 2>&1

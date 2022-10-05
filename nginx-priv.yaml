@@ -8,14 +8,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: nginx-priv
   template:
     metadata:
       labels:
-        app: nginx
+        app: nginx-priv
     spec:
       containers:
-      - name: nginx
+      - name: nginx-priv
         image: nginx:1.14.2
         ports:
         - containerPort: 80

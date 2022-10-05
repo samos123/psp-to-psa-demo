@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-nonpriv
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: us-docker.pkg.dev/sam-argolis/default/nginx:latest
+        ports:
+        - containerPort: 9736
+        volumeMounts:
+            - name: nginx-html-configmap
+              subPath: index.html
+              mountPath: /app/index.html
+      volumes:
+      - name: nginx-html-configmap
+        configMap:
+          name: nginx-html-configmap
+          defaultMode: 0600
+

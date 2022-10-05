@@ -4,17 +4,20 @@ metadata:
   name: my-psp
 spec:
   privileged: false  # Prevents creation of privileged Pods
-  allowPrivilegeEscalation: false
-  defaultAddCapabilities:
-    - CHOWN
   seLinux:
     rule: RunAsAny
   supplementalGroups:
     rule: RunAsAny
   runAsUser:
-    rule: RunAsAny
+    rule: MustRunAs
+    ranges:
+      - min: 2005
+        max: 65535
   fsGroup:
-    rule: RunAsAny
+    rule: MustRunAs
+    ranges:
+      - min: 1005
+        max: 65535
   volumes:
   - '*'
 

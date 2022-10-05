@@ -17,7 +17,8 @@ wait_available() {
 
 
 # Demonstrate PSP is currently active
-pe "kubectl get psp my-psp -o yaml"
+pe "cat psp-policy.yaml"
+# maybe shorten or remove or show just basic cli output instead of yaml
 pe "kubectl get clusterrole my-psp -o yaml"
 pe "kubectl get clusterrolebinding psp-all-sa  -o yaml"
 pe "cat nginx-priv.yaml"
@@ -25,17 +26,20 @@ pe "kubectl apply -f nginx-priv.yaml"
 pe "kubectl describe deployment/nginx-priv"
 pe "kubectl get events --field-selector reason=FailedCreate"
 pe "kubectl delete -f nginx-priv.yaml"
-pe "cat nginx.yaml"
-pe "kubectl apply -f nginx.yaml"
+pe "cat nginx-nonpriv.yaml"
+pe "kubectl apply -f nginx-nonpriv.yaml"
 wait_available deployment/nginx-nonpriv
 pe "kubectl describe deployment/nginx-nonpriv"
 
 # see which pod security standard would work for existing pods
+# make sure to mention first running dry run and only applying after no warnings
 pe "kubectl label --dry-run=server --overwrite ns default pod-security.kubernetes.io/enforce=restricted"
 pe "kubectl label --dry-run=server --overwrite ns default pod-security.kubernetes.io/enforce=baseline"
+# talk about how easy it's just to add a label to a namespace vs roles and rolebindings on SAs:
 pe "kubectl label --overwrite ns default pod-security.kubernetes.io/enforce=baseline"
 
-# disable psp on namespace default
+# disable psp on namespace default it always prefers non mutating PSP that's why this works and
+# why original PSP is no longer being active on the pod
 pe "cat privileged-psp.yaml"
 pe "kubectl apply -f privileged-psp.yaml"
 pe "kubectl create clusterrole privileged-psp --verb use --resource podsecuritypolicies.policy --resource-name privileged"
@@ -49,7 +53,7 @@ pe "kubectl describe deployment/nginx-priv"
 pe "kubectl get events --field-selector reason=FailedCreate --sort-by='.metadata.creationTimestamp' | tail -n 1"
 
 # cleanup
-kubectl delete -f nginx.yaml > /dev/null 2>&1
+kubectl delete -f nginx-nonpriv.yaml > /dev/null 2>&1
 kubectl delete -f nginx-priv.yaml > /dev/null 2>&1
 kubectl delete -f privileged-psp.yaml > /dev/null 2>&1
 kubectl delete -n default rolebinding disable-psp > /dev/null 2>&1
