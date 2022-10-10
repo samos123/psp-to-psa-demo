@@ -15,13 +15,13 @@ wait_available() {
   kubectl wait --for=condition=Available $1 > /dev/null
 }
 
-# TODO: add realistic nginx example using fsGroups and use useNonRoot and non standard port
 
-
+TYPE_SPEED=40
 # Demonstrate PSP is currently active
 pe "cat psp-policy.yaml"
 pe "cat nginx-nonpriv.yaml"
 pe "kubectl apply -f nginx-nonpriv.yaml"
+pe "cat nginx-html-configmap.yaml"
 wait_available deployment/nginx-nonpriv
 pe "kubectl get pod -l app=nginx -o json | jq '.items[].spec.containers'"
 pe "kubectl get pod -l app=nginx -o json | jq '.items[].spec.securityContext'"
@@ -39,7 +39,7 @@ pe "kubectl rollout restart deployment/nginx-nonpriv"
 pe "kubectl port-forward service/nginx 8080:80"
 pe "kubectl get pod -l app=nginx -o json | jq '.items[].spec.containers'"
 pe "kubectl get pod -l app=nginx -o json | jq '.items[].spec.securityContext'"
-pe "cat Dockerfile"
+#pe "cat Dockerfile"
 
 
 pe "cat nginx-with-security-context.yaml"

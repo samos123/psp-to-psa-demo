@@ -16,6 +16,7 @@ wait_available() {
 }
 
 
+TYPE_SPEED=40
 # Demonstrate PSP is currently active
 #pe "kubectl get psp my-psp -o yaml"
 #pe "kubectl get clusterrole my-psp -o yaml"
