@@ -24,8 +24,7 @@ TYPE_SPEED=40
 pe "cat nginx-nonpriv.yaml"
 pe "kubectl apply -f nginx-nonpriv.yaml"
 wait_available deployment/nginx-nonpriv
-pe "kubectl get pod -l app=nginx -o json | jq '.items[].spec.containers'"
-
+pe "kubectl get pod -l app=nginx -o json | jq '.items[].spec' | yq -p json"
 # lets use pspmigrator to detect and migrate default namespace
 p "go install github.com/kubernetes-sigs/pspmigrator/cmd/pspmigrator"
 pe "pspmigrator mutating pods"

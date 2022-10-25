@@ -16,6 +16,7 @@ wait_available() {
 }
 
 
+TYPE_SPEED=40
 # Demonstrate PSP is currently active
 pe "cat psp-policy.yaml"
 # maybe shorten or remove or show just basic cli output instead of yaml
