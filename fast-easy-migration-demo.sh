@@ -38,6 +38,7 @@ pe "kubectl label --dry-run=server --overwrite ns default pod-security.kubernete
 pe "kubectl label --dry-run=server --overwrite ns default pod-security.kubernetes.io/enforce=baseline"
 # talk about how easy it's just to add a label to a namespace vs roles and rolebindings on SAs:
 pe "kubectl label --overwrite ns default pod-security.kubernetes.io/enforce=baseline"
+pe "kubectl label --overwrite ns default pod-security.kubernetes.io/warn=baseline"
 
 # disable psp on namespace default it always prefers non mutating PSP that's why this works and
 # why original PSP is no longer being active on the pod
