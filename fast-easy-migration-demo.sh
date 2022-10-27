@@ -61,3 +61,4 @@ kubectl delete -f privileged-psp.yaml > /dev/null 2>&1
 kubectl delete -n default rolebinding disable-psp > /dev/null 2>&1
 kubectl delete clusterrole privileged-psp > /dev/null 2>&1
 kubectl label namespaces default pod-security.kubernetes.io/enforce- > /dev/null
+kubectl label namespaces default pod-security.kubernetes.io/warn- > /dev/null
